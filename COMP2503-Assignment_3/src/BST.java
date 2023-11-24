@@ -3,46 +3,88 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * The BST class represents a Binary Search Tree that stores elements of type T.
+ * It supports various operations such as adding elements, removing elements, traversing through, 
+ * and provides an iterator for in-order traversal.
+ *
+ * @param <T> The generic type of elements stored in the tree, must implement Comparable interface.
+ */
 public class BST<T extends Comparable<T>> implements Iterable<T> {
 	class BSTNode implements Comparable<BSTNode> {
 		private T data;
 		private BSTNode left;
 		private BSTNode right;
 
+		/**
+	     * The BSTNode represents a node in the Binary Search Tree.
+	     * Each node contains data, a reference to the left child, and a reference to the right child.
+	     * @param T - data to create node 
+	     */
 		public BSTNode(T d) {
 			setLeft(null);
 			setRight(null);
 			setData(d);
 		}
 		
+		/**
+	     * @return T - the data of the node.
+	     */
 		public T getData() { 
 			return data; 
 		}
 		
+
+		/**
+	     * @param T - the data of the node to set.
+	     */
 		public void setData(T d) { 
 			data = d; 
 		}
 		
+		/**
+	     * @param BSTNode - the data to set the left child of node.
+	     */
 		public void setLeft(BSTNode l) { 
 			left = l; 
 		}
 		
+		/**
+	     * @param BSTNode - the data to set the right child of node.
+	     */
 		public void setRight(BSTNode r) { 
 			right = r; 
 		}
 		
+		/**
+	     * @return BSTNode - retrieves the left child of node.
+	     */
 		public BSTNode getLeft() { 
 			return left; 
 		}
 		
+		/**
+	     * @return BSTNode - retrieves the right child of node.
+	     */
 		public BSTNode getRight() { 
 			return right; 
 		}
 		
+		 /**
+         * Checks if the node is a leaf (has no children).
+         *
+         * @return true if the node is a leaf. 
+         */
 		public boolean isLeaf() { 
 			return (getLeft() == null) && (getRight() == null); 
 		}
 		
+		 /**
+         * Compares this node with another given node based on the data they contain.
+         *
+         * @param o The node to compare with.
+         * @return A negative integer, zero, or a positive integer as this node is less than, equal to, or greater than the other.
+         */
 		public int compareTo(BSTNode o) {
 			return this.getData().compareTo(o.getData());
 		}
@@ -247,9 +289,10 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		return opHeight;
 	}
 	
-	private Queue<T> queue = new LinkedList<T>();
+	
 	
 	private void visit(BSTNode r) {
+		Queue<T> queue = new LinkedList<T>();
 		if (r != null)
 			queue.add(r.getData());
 	}
@@ -305,65 +348,10 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		}
 	}
 	
-	public static final int INORDER = 0;
-	public static final int PREORDER = 1;
-	public static final int POSTORDER = 2;
-	public static final int LEVELORDER = 3;
-	//public static final int REVORDER = 4;
 	
-	public void traverse (int travType) {
-		traverse(root, travType);
-	}
-	
-	private void traverse (BSTNode r, int travType) {
-		if (r == null) 
-			return;
-		else {
-			switch (travType) {
-			case INORDER:
-				traverse(r.getLeft(), travType);
-				visit(r);
-				traverse(r.getRight(), travType);
-				break;
-				
-			case PREORDER:
-				visit(r);
-				traverse(r.getLeft(), travType);
-				traverse(r.getRight(), travType);
-				break;
-				
-			case POSTORDER:
-				traverse(r.getLeft(), travType);
-				traverse(r.getRight(), travType);
-				visit(r);
-				break;
-				
-			case LEVELORDER:
-				//create a queue, put the root on the queue, while the queue is not empty, traverse through
-				Queue<BSTNode> q = new LinkedList<BSTNode>();
-				if (r != null) {
-					q.add(r);
-				}
-				while (!q.isEmpty()) {
-					// get the front element 
-					// visit this element 
-					// add the children of this element to the queue 
-					BSTNode curr = q.remove();
-					visit(curr);
-					if (curr.getLeft() != null) {
-						q.add(curr.getLeft());
-					}
-					if (curr.getRight() != null) {
-					q.add(curr.getRight());
-					}
-				}
-				break;
-				
-			}
-		}
-	}
 	
 	private class BSTIterator implements Iterator<T> {
+		private Queue<T> queue = new LinkedList<T>();
 
 		public void BSTIteratorInOrder() {
 			queue.clear();
@@ -379,6 +367,63 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		@Override
 		public T next() {
 			return queue.remove();
+		}
+		
+		public static final int INORDER = 0;
+		public static final int PREORDER = 1;
+		public static final int POSTORDER = 2;
+		public static final int LEVELORDER = 3;
+		
+		public void traverse (int travType) {
+			traverse(root, travType);
+		}
+		
+		private void traverse (BSTNode r, int travType) {
+			if (r == null) 
+				return;
+			else {
+				switch (travType) {
+				case INORDER:
+					traverse(r.getLeft(), travType);
+					visit(r);
+					traverse(r.getRight(), travType);
+					break;
+					
+				case PREORDER:
+					visit(r);
+					traverse(r.getLeft(), travType);
+					traverse(r.getRight(), travType);
+					break;
+					
+				case POSTORDER:
+					traverse(r.getLeft(), travType);
+					traverse(r.getRight(), travType);
+					visit(r);
+					break;
+					
+				case LEVELORDER:
+					//create a queue, put the root on the queue, while the queue is not empty, traverse through
+					Queue<BSTNode> q = new LinkedList<BSTNode>();
+					if (r != null) {
+						q.add(r);
+					}
+					while (!q.isEmpty()) {
+						// get the front element 
+						// visit this element 
+						// add the children of this element to the queue 
+						BSTNode curr = q.remove();
+						visit(curr);
+						if (curr.getLeft() != null) {
+							q.add(curr.getLeft());
+						}
+						if (curr.getRight() != null) {
+						q.add(curr.getRight());
+						}
+					}
+					break;
+					
+				}
+			}
 		}
 		
 	}

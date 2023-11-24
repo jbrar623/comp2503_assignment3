@@ -53,33 +53,33 @@ public class A3 {
 //		 */
 		
 	    // Delete the following two avengers (if they exist) from the alphabetical tree
-//	    Avenger toDeleteBarton = new Avenger("hawkeye", "barton", "renner");
-//	    Avenger toDeleteBanner = new Avenger("hulk", "banner", "ruffalo");
-//	    alphabeticalBST.delete(toDeleteBarton);
-//	    alphabeticalBST.delete(toDeleteBanner);
+	    Avenger toDeleteBarton = new Avenger("hawkeye", "barton", "renner");
+	    Avenger toDeleteBanner = new Avenger("hulk", "banner", "ruffalo");
+	    alphabeticalBST.delete(toDeleteBarton);
+	    alphabeticalBST.delete(toDeleteBanner);
 //
 //	    // Use the tree iterator to do an in-order traversal of the alphabetical tree
-//	    BSTIterator iterator = new BSTIterator(alphabeticalBST);
+	    BSTIterator iterator = new BSTIterator(alphabeticalBST);
 //
 //	    // Add avengers to the other trees with alternative ordering
-//	    while (iterator.hasNext()) {
-//	        Avenger currentAvenger = iterator.next();
-//
-//	        // Add to mostPopularPerformerBST
-//	        mostPopularPerformerBST.add(currentAvenger);
-//
-//	        // Add to mostPopularAvengerBST
-//	        mostPopularAvengerBST.add(currentAvenger);
-//
-//	        // Add to mentionBST
-//	        mentionBST.add(currentAvenger);
-		 	Avenger toDeleteBarton = new Avenger("banner", "barton", 0);
-			alphabeticalBST.delete(toDelete); 
-			for (Avenger a : alphabeticalBST) {
-				mostPopularAvengerBST.add(a); 
-				mostPopularPerformerBST.add(a); 
-				mentionBST.add(a); 
-	    }
+	    while (iterator.hasNext()) {
+	        Avenger currentAvenger = iterator.next();
+
+	        // Add to mostPopularPerformerBST
+	        mostPopularPerformerBST.add(currentAvenger);
+
+	        // Add to mostPopularAvengerBST
+	        mostPopularAvengerBST.add(currentAvenger);
+
+	        // Add to mentionBST
+	        mentionBST.add(currentAvenger);
+//		 	Avenger toDeleteBarton = new Avenger("banner", "barton", 0);
+//			alphabeticalBST.delete(toDelete); 
+//			for (Avenger a : alphabeticalBST) {
+//				mostPopularAvengerBST.add(a); 
+//				mostPopularPerformerBST.add(a); 
+//				mentionBST.add(a); 
+//	    }
 	}
 
 	/**
