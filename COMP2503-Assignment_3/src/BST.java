@@ -50,15 +50,18 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 
 	private BSTNode root;
 	private int size;
+	private Comparator<T> comparator;
 
 	public BST() {
 		root = null;
 		size = 0;
+		comparator = null;
 	}
 
 	public BST(Comparator<T> externalComp) {
 		root = null;
 		size = 0;
+		comparator = externalComp;
 	}
 
 	/**
@@ -245,6 +248,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	}
 	
 	private Queue<T> queue = new LinkedList<T>();
+	
 	private void visit(BSTNode r) {
 		if (r != null)
 			queue.add(r.getData());
@@ -301,11 +305,71 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		}
 	}
 	
-	private class BSTIteratorInOrder implements Iterator {
+	public static final int INORDER = 0;
+	public static final int PREORDER = 1;
+	public static final int POSTORDER = 2;
+	public static final int LEVELORDER = 3;
+	//public static final int REVORDER = 4;
+	
+	public void traverse (int travType) {
+		traverse(root, travType);
+	}
+	
+	private void traverse (BSTNode r, int travType) {
+		if (r == null) 
+			return;
+		else {
+			switch (travType) {
+			case INORDER:
+				traverse(r.getLeft(), travType);
+				visit(r);
+				traverse(r.getRight(), travType);
+				break;
+				
+			case PREORDER:
+				visit(r);
+				traverse(r.getLeft(), travType);
+				traverse(r.getRight(), travType);
+				break;
+				
+			case POSTORDER:
+				traverse(r.getLeft(), travType);
+				traverse(r.getRight(), travType);
+				visit(r);
+				break;
+				
+			case LEVELORDER:
+				//create a queue, put the root on the queue, while the queue is not empty, traverse through
+				Queue<BSTNode> q = new LinkedList<BSTNode>();
+				if (r != null) {
+					q.add(r);
+				}
+				while (!q.isEmpty()) {
+					// get the front element 
+					// visit this element 
+					// add the children of this element to the queue 
+					BSTNode curr = q.remove();
+					visit(curr);
+					if (curr.getLeft() != null) {
+						q.add(curr.getLeft());
+					}
+					if (curr.getRight() != null) {
+					q.add(curr.getRight());
+					}
+				}
+				break;
+				
+			}
+		}
+	}
+	
+	private class BSTIterator implements Iterator<T> {
 
-		public BSTIteratorInOrder() {
+		public void BSTIteratorInOrder() {
 			queue.clear();
-			inOrderTraversal(root);
+			// traverse the tree in-order
+			traverse(root, INORDER);
+		
 		}
 		@Override
 		public boolean hasNext() {
@@ -313,14 +377,18 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		}
 
 		@Override
-		public Object next() {
+		public T next() {
 			return queue.remove();
 		}
 		
 	}
 
+
 	@Override
+	/** Return an in-order tterator over a tree.
+	* @returns an iterator
+	*/
 	public Iterator<T> iterator() {
-		return new BSTIteratorInOrder();
+		return new BSTIterator();
 	}
 }
