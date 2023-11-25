@@ -90,6 +90,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		}
 	}
 
+	
 	private BSTNode root;
 	private int size;
 	private Comparator<T> comparator;
@@ -122,6 +123,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Add element d to the tree.
+	 * @param data of type T 
 	 */
 	public void add(T d) {
 		BSTNode n = new BSTNode(d);
@@ -134,12 +136,14 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	}
 
 	/**
-	 * Return the height of the tree.
+	 * Return the height of the tree
+	 * @return int the height of a tree given the root
 	 */
 	public int height() {
 		return height(root);
 	}
 
+	
 	public void printInOrder() {
 		inOrderTraversal(root);
 	}
@@ -157,7 +161,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	}
 	
 	public T delete (T d) {
-		return delete(root).getData();
+		return  delete(d, root).getData();
 	}
 	
 	public int optimalHeight() {
@@ -166,41 +170,65 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	
 	// Private methods.
 
-	private BSTNode delete(BSTNode r) {
-		//TODO: implement delete method 
+	private BSTNode delete(T toRemove, BSTNode r) {
+		
 		
 		// Base case
         if (r == null)
-        	return null;
+        	return r;
+       
+        int compResult = toRemove.compareTo(r.getData());
         
-		// case 1: node to delete is a leaf 
-        else if (r.isLeaf()) {
-        	size --;
-        	return null;
+        if (compResult < 0) 
+        	 // case 1: node to delete is a leaf 
+        	r.setLeft(delete (toRemove, r.getLeft()));
+        else if (compResult > 0) {
+        	 // case 2: node to delete has one child 
+        	r.setRight(delete (toRemove, r.getRight()));
         }
-		
-		// case 2: node to delete has one child 
-        else if (r.getLeft() == null &&  r.getRight() != null) {
-        	size --;
-        	r.setRight(null);
-        }
-        else if (r.getLeft() != null &&  r.getRight() == null) {
-        	size --;
-        	r.setLeft(null);
-        }
-        
- 
-		// case 3: node to delete has two children 
-	    else {
-	        // Find in-order predecessor
+        else if (r.getLeft() != null &&  r.getRight() != null) {
+        // case 3: node to delete has two children 
+        	  // Find in-order predecessor
 	        r.setData(findMin(r.getRight()));
 	        // delete the in-order successor
-	        r.setRight(delete(r.getRight()));
-	        return r;
-	    }
-		return r;
+	        r.setRight(delete(r.getData(), r.getRight()));
+        }
+        else {
+        	if (r.getLeft() != null) {
+        	    r = r.getLeft();
+        	} else {
+        	    r = r.getRight();
+        	}
+        }
+    	return r;
+    	
+    	}
+
+// first attempt at delete method
+//        else if (r.isLeaf()) {
+//        	size --;
+//        	return null;
+//        }
+//		
+//		// case 2: node to delete has one child 
+//        else if (r.getLeft() == null &&  r.getRight() != null) {
+//        	size --;
+//        	r.setRight(null);
+//        }
+//        else if (r.getLeft() != null &&  r.getRight() == null) {
+//        	size --;
+//        	r.setLeft(null);
+//        }
+        
+ 
+//		// case 3: node to delete has two children 
+//	    else {
+//	        // Find in-order predecessor
+//	        r.setData(findMin(r.getRight()));
+//	        // delete the in-order successor
+//	        r.setRight(delete(r.getData(), r.getRight()));
+//	    }
 	
-	}
 	
 	private T findMin(BSTNode r) {
 		   T minNode = r.getData();
@@ -251,7 +279,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		}
 	}
 
-	/* Implement a height method. */
+	
 	private int height(BSTNode r) {
 		// TODO
 		//The height of a tree is equal to the height of the root node.
