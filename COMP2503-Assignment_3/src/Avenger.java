@@ -180,5 +180,10 @@ public class Avenger implements Comparable<Avenger> {
 	public int getMentionIndex() {
 		return mentionIndex;
 	}
-	
+
+	public void setMentionIndex(int i) {
+		i = mentionIndex; 
+		
+	}
+
 }

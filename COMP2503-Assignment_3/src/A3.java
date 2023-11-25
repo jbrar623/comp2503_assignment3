@@ -26,6 +26,7 @@ public class A3 {
 
 	private int topN = 4;
 	private int totalwordcount = 0;
+	private int mentionIndex = 0;
 	private Scanner input = new Scanner(System.in);
 	private BST<Avenger> alphabeticalBST = new BST<Avenger>();
 	private BST<Avenger> mentionBST = new BST<Avenger>(new AvengerComparatorMentionOrder());
@@ -65,7 +66,7 @@ public class A3 {
 	    alphabeticalBST.delete(toDeleteBarton);
 	    alphabeticalBST.delete(toDeleteBanner);
 	    
-	    // Use the tree iterator to do an in-order traversal of the alphabetical tree
+	    // Use the tree iterator to traverse the alphabetical tree in order
 	    Iterator<Avenger> iterator = alphabeticalBST.iterator();
 
 	    // Add avengers to the other trees with alternative ordering
@@ -111,16 +112,34 @@ public class A3 {
 			String word = cleanWord(input.next());
 
 			if (word.length() > 0) {
-				totalwordcount++;
-				Avenger newAvengerObject = createAvengerObject(word);
-				if (newAvengerObject == null) {
-					continue;
-				} else {
-					
-				}
-			}
+	            totalwordcount++;
+
+	            Avenger newAvengerObject = createAvengerObject(word);
+	            
+	          //If avenger is not part of roster, do not create
+                if (newAvengerObject == null) {
+                    continue;
+                }
+                else {
+	                // Check if the avenger is already in the alphabetically ordered tree
+	                Avenger existingAvenger = alphabeticalBST.find(newAvengerObject);
+	                
+	                if (existingAvenger != null ) {
+	                    // If avenger already exists, increase frequency count
+	                    existingAvenger.addFrequency(word);
+	           
+	                } else {
+	                    // If avenger is not in the tree, add a new node
+	                	newAvengerObject.addFrequency(word);
+	                    newAvengerObject.setMentionIndex(mentionIndexCount++);
+	                    alphabeticalBST.add(newAvengerObject);
+	                }
+	            }
+	        }
 		}
+	
 	}
+		
 	
 	/**
 	 * creates an avenger object based on a provided word 
@@ -177,8 +196,10 @@ public class A3 {
 		Avenger printString = null;
 		while (iterator.hasNext()) {
 			printString = iterator.next(); 	
-		}
+//			System.out.println(printString.toString());	
+		}	
 			return printString;
+			
 	}
 	
 	
@@ -187,6 +208,7 @@ public class A3 {
      * number of mentioned avengers. 
      */
 	private void printResults() {
+		
 		
 		// Todo: Print the total number of words (this total should not include words that are all digits or punctuation.)
 				System.out.println("Total number of words: " + totalwordcount);
@@ -197,6 +219,7 @@ public class A3 {
 				System.out.println("All avengers in the order they appeared in the input stream:");
 				// TODO: Print the list of avengers in the order they appeared in the input
 				// Make sure you follow the formatting example in the sample output
+				printList(mentionBST);
 				System.out.println();
 				
 				System.out.println("Top " + printTopN(mostPopularAvengerBST) + " most popular avengers:");
@@ -211,6 +234,7 @@ public class A3 {
 
 				System.out.println("All mentioned avengers in alphabetical order:");
 				// TODO: Print the list of avengers in alphabetical order
+				printList(alphabeticalBST);
 				System.out.println();
 
 				//TODO: Print the actual height and the optimal height for each of the four trees.

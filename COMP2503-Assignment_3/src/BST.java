@@ -161,7 +161,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	}
 	
 	public T delete (T d) {
-		return  delete(d, root).getData();
+		return  delete(root, d).getData();
 	}
 	
 	public int optimalHeight() {
@@ -170,41 +170,71 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	
 	// Private methods.
 
-	private BSTNode delete(T toRemove, BSTNode r) {
-		
-		
-		// Base case
-        if (r == null)
-        	return r;
-       
-        int compResult = toRemove.compareTo(r.getData());
-        
-        if (compResult < 0) 
-        	 // case 1: node to delete is a leaf 
-        	r.setLeft(delete (toRemove, r.getLeft()));
-        else if (compResult > 0) {
-        	 // case 2: node to delete has one child 
-        	r.setRight(delete (toRemove, r.getRight()));
-        }
-        else if (r.getLeft() != null &&  r.getRight() != null) {
-        // case 3: node to delete has two children 
-        	  // Find in-order predecessor
-	        r.setData(findMin(r.getRight()));
-	        // delete the in-order successor
-	        r.setRight(delete(r.getData(), r.getRight()));
-        }
-        else {
-        	if (r.getLeft() != null) {
-        	    r = r.getLeft();
-        	} else {
-        	    r = r.getRight();
-        	}
-        }
-    	return r;
-    	
-    	}
+//	private BSTNode delete(T toRemove, BSTNode r) {
+//		
+//		
+//		// Base case
+//        if (r == null)
+//        	return r;
+//       
+//        int compResult = toRemove.compareTo(r.getData());
+//        
+//        if (compResult < 0) 
+//        	 // case 1: node to delete is a leaf 
+//        	r.setLeft(delete (toRemove, r.getLeft()));
+//        else if (compResult > 0) {
+//        	 // case 2: node to delete has one child 
+//        	r.setRight(delete (toRemove, r.getRight()));
+//        }
+//        else if (r.getLeft() != null &&  r.getRight() != null) {
+//        // case 3: node to delete has two children 
+//        	  // Find in-order predecessor
+//	        r.setData(findMin(r.getRight()));
+//	        // delete the in-order successor
+//	        r.setRight(delete(r.getData(), r.getRight()));
+//        }
+//        else {
+//        	r = ( r.getLeft() != null ) ? r.getLeft() : r.getRight();
+//        	}
+//    	return r;
+//    	
+//    	}
+	
+	
+	public BSTNode delete(BSTNode r, T val) {
+		//base case - if node is null
+	    if(r == null) {
+	      return r;
+	    }
+	    int compResult = val.compareTo(r.getData());
+	    if(compResult > 0) {
+	      r.left = delete(r.getLeft(), val);
+	    } else if(compResult < 0) {
+	      r.right = delete(r.right, val);
+	    } else {
+	      if(r.left == null || r.right == null) {
+	        BSTNode temp = r.getLeft() != null ? r.getLeft() : r.getRight();
 
-// first attempt at delete method
+	        if(temp == null) {
+	          return null;
+	        } else {
+	          return temp;
+	        }
+	      } else {
+	          BSTNode min = findMin(r);
+	          r.setData(min.getData());
+	          
+	          r.setRight(delete(r.getRight(), min.getData()));
+	          return r;
+	        }
+	    }
+	    
+	    return r;
+	  }
+
+
+	
+// first attempt at delete method:
 //        else if (r.isLeaf()) {
 //        	size --;
 //        	return null;
@@ -219,8 +249,6 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 //        	size --;
 //        	r.setLeft(null);
 //        }
-        
- 
 //		// case 3: node to delete has two children 
 //	    else {
 //	        // Find in-order predecessor
@@ -230,13 +258,26 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 //	    }
 	
 	
-	private T findMin(BSTNode r) {
-		   T minNode = r.getData();
-	        while (r.getLeft() != null) {
-	            minNode = (r.getLeft().getData());
-	            r = r.getLeft();
-	        }
-	        return minNode;
+	private BSTNode findMin(BSTNode r) {
+		//first attempt at findMin method:
+//		   T minNode = r.getData();
+//	        while (r.getLeft() != null) {
+//	            minNode = (r.getLeft().getData());
+//	            r = r.getLeft();
+//	        }
+//	        return minNode;
+	        
+	        if(r == null) {
+	            return null;
+	          }
+	          
+	          BSTNode temp = r.getRight();
+	          
+	          while(temp.left != null) {
+	            temp = temp.left;
+	          }
+	          
+	          return temp;
 	        
 	}
 
