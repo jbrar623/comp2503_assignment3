@@ -111,7 +111,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	 * Return the number of nodes in the tree.
 	 */
 	public int size() {
-		return size;
+		return treeSize(root);
 	}
 	
 	/**
@@ -142,7 +142,6 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	public int height() {
 		return height(root);
 	}
-
 	
 	public void printInOrder() {
 		inOrderTraversal(root);
@@ -200,6 +199,16 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 //    	
 //    	}
 	
+	
+	private int treeSize(BSTNode r) {
+		// base case 
+		if (r == null) 
+			size = 0;
+		else {
+			size = 1 + treeSize(r.getLeft()) + treeSize(r.getRight());
+		}
+		return size;
+	}
 	
 	public BSTNode delete(BSTNode r, T val) {
 		//base case - if node is null
@@ -327,7 +336,6 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		//The height of a node is equal to the maximum of the heights of the
 		//two subtrees of the node.
 		
-		
 		int h = -1;
 		if (r == null) {
 			h++;
@@ -352,10 +360,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	}
 
 	private int optimalHeight(BSTNode r) {
-		
-		int n = height(r);
-		int opHeight = (int) ((Math.log10(n))/(Math.log10(2)));
-		return opHeight;
+		return (int) ((Math.log10(height(r)))/(Math.log10(2)));
 	}
 	
 	

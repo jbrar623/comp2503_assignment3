@@ -191,15 +191,15 @@ public class A3 {
 	 * @param list - takes in an ordered BST containign avenger objects 
 	 * @return Avenger objects - to be printed in a string
 	 */
-	private Avenger printTopN(BST<Avenger> list) {
+	private Avenger printTopN(int topN, BST<Avenger> list) {
 		Iterator<Avenger> iterator = list.iterator(); 
 		Avenger printString = null;
-		while (iterator.hasNext()) {
+		
+		while (iterator.hasNext() && topN > 0) {
 			printString = iterator.next(); 	
 //			System.out.println(printString.toString());	
 		}	
 			return printString;
-			
 	}
 	
 	
@@ -211,6 +211,7 @@ public class A3 {
 		
 		
 		// Todo: Print the total number of words (this total should not include words that are all digits or punctuation.)
+				System.out.println();
 				System.out.println("Total number of words: " + totalwordcount);
 				// TODO: Print the number of mentioned avengers after deleting "barton" and "banner".
 				System.out.println("Number of Avengers Mentioned: " + mentionBST.size());
@@ -222,12 +223,12 @@ public class A3 {
 				printList(mentionBST);
 				System.out.println();
 				
-				System.out.println("Top " + printTopN(mostPopularAvengerBST) + " most popular avengers:");
+				System.out.println("Top " + printTopN(topN, mostPopularAvengerBST) + " most popular avengers:");
 				// TODO: Print the most popular avengers, see the instructions for tie breaking
 				// Make sure you follow the formatting example in the sample output
 				System.out.println();
 
-				System.out.println("Top " + printTopN(mostPopularPerformerBST) + " most popular performers:");
+				System.out.println("Top " + printTopN(topN, mostPopularPerformerBST) + " most popular performers:");
 				// TODO: Print the most popular performers, see the instructions for tie breaking
 				// Make sure you follow the formatting example in the sample output
 				System.out.println();
@@ -248,6 +249,5 @@ public class A3 {
 				+ " (Optimal height for this tree is : " + mostPopularPerformerBST.optimalHeight() + ")");
 		
 	}
-	
 }
 
