@@ -98,13 +98,13 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	public BST() {
 		root = null;
 		size = 0;
-		comparator = null;
+		this.comparator = null;
 	}
 
 	public BST(Comparator<T> externalComp) {
 		root = null;
 		size = 0;
-		comparator = externalComp;
+		this.comparator = externalComp;
 	}
 
 	/**
@@ -159,8 +159,8 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		levelOrderTraversal(root);
 	}
 	
-	public T delete (T d) {
-		return  delete(root, d).getData();
+	public void delete (T d) {
+		root = delete(root, d);
 	}
 	
 	public int optimalHeight() {
@@ -216,26 +216,36 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 	      return r;
 	    }
 	    int compResult = val.compareTo(r.getData());
-	    if(compResult > 0) {
-	      r.left = delete(r.getLeft(), val);
+	    if(compResult < 0) {
+	    	//value to be deleted is in left subtree - less than root
+	    	r.setLeft(delete(root.getLeft(), val));
 	    } else if(compResult < 0) {
-	      r.right = delete(r.right, val);
-	    } else {
-	      if(r.left == null || r.right == null) {
-	        BSTNode temp = r.getLeft() != null ? r.getLeft() : r.getRight();
-
-	        if(temp == null) {
-	          return null;
-	        } else {
-	          return temp;
+	    	//value to be deleted is in the right subtree - greater than the root
+	    	r.setRight(delete(root.getRight(), val));
+	    } else { 
+	        // Node with only one child or no child
+	        if (r.getLeft() == null) {
+	            return r.getRight();
+	        } else if (r.getRight() == null) {
+	            return r.getLeft();
 	        }
-	      } else {
-	          BSTNode min = findMin(r);
-	          r.setData(min.getData());
-	          
-	          r.setRight(delete(r.getRight(), min.getData()));
-	          return r;
-	        }
+//	      r.right = delete(r.right, val);
+//	    } else {
+//	      if(r.left == null || r.right == null) {
+//	        BSTNode temp = r.getLeft() != null ? r.getLeft() : r.getRight();
+//
+//	        if(temp == null) {
+//	          return null;
+//	        } else {
+//	          return temp;
+//	        }
+//	      } else {
+//	          BSTNode min = findMin(r);
+//	          r.setData(min.getData());
+//	          
+//	          r.setRight(delete(r.getRight(), min.getData()));
+//	          return r;
+//	        }
 	    }
 	    
 	    return r;
@@ -266,28 +276,21 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 //	        r.setRight(delete(r.getData(), r.getRight()));
 //	    }
 	
-	
+	/**
+	 * takes the root of a tree to find the smallest value of the tree
+	 * @param r - the root of the tree
+	 * @return the node that is the minimum value of the tree
+	 */
 	private BSTNode findMin(BSTNode r) {
-		//first attempt at findMin method:
-//		   T minNode = r.getData();
-//	        while (r.getLeft() != null) {
-//	            minNode = (r.getLeft().getData());
-//	            r = r.getLeft();
-//	        }
-//	        return minNode;
-	        
-	        if(r == null) {
-	            return null;
-	          }
-	          
-	          BSTNode temp = r.getRight();
-	          
-	          while(temp.left != null) {
-	            temp = temp.left;
-	          }
-	          
-	          return temp;
-	        
+		
+		 if(r == null) {
+			 return null;
+		 }
+			 
+		while (r.getLeft() != null) {
+	        r = r.getLeft();
+	    }
+	    	return r;
 	}
 
 	private T find(T d, BSTNode r) {
@@ -338,26 +341,35 @@ public class BST<T extends Comparable<T>> implements Iterable<T> {
 		
 		int h = -1;
 		if (r == null) {
-			h++;
+			return h;
 			//base case 
 		}
-		else if (r.getLeft() == null && r.getRight() == null) {
-			h++;
-			//case: if tree root has no children
-		}
 		else {
-		int leftH = height(r.left);
-	    int rightH = height(r.right);
+	        // Recursive case: height is the maximum height of left and right subtree heights
+	        int leftHeight = height(r.getLeft());
+	        int rightHeight = height(r.getRight());
 
-	    if (leftH > rightH) {
-	        h = leftH + 1;
-	    } 
-	    else {
-	        h = rightH + 1;
+	        // Height of the tree rooted at 'r' is the maximum of left and right subtree heights + 1 for the root
+	        return Math.max(leftHeight, rightHeight) + 1;
 	    }
-		}
-		return h;
 	}
+//		else if (r.getLeft() == null && r.getRight() == null) {
+//			h++;
+//			//case: if tree root has no children
+//		}
+//		else {
+//		int leftH = height(r.left);
+//	    int rightH = height(r.right);
+//
+//	    if (leftH > rightH) {
+//	        h = leftH + 1;
+//	    } 
+//	    else {
+//	        h = rightH + 1;
+//	    }
+//		}
+//		return h;
+//	}
 
 	private int optimalHeight(BSTNode r) {
 		return (int) ((Math.log10(height(r)))/(Math.log10(2)));

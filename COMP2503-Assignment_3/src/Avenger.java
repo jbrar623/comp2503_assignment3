@@ -182,8 +182,7 @@ public class Avenger implements Comparable<Avenger> {
 	}
 
 	public void setMentionIndex(int i) {
-		i = mentionIndex; 
-		
+		this.mentionIndex = i;
 	}
 
 }

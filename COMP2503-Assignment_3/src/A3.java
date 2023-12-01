@@ -1,5 +1,7 @@
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -52,27 +54,24 @@ public class A3 {
 	 * deletes specified Avengers
 	 */
 	private void createdAlternativeOrderBSTs() {
-		/* TODO:
-//		 *   - delete the following two avengers (if they exist) from the alphabetical tree
-//		 *   	- barton
-//		 *   	- banner
-//		 *   use the tree iterator to do an in-order traversal of the alphabetical tree,
-//		 *   and add avengers to the other trees with alternative ordering
-//		 */
 		
-	    // Delete the following two avengers (if they exist) from the alphabetical tree
+	    // Delete the following two avengers (if they exist) from the alphabetical tree (barton and banner)
 	    Avenger toDeleteBarton = new Avenger("hawkeye", "barton", "renner");
 	    Avenger toDeleteBanner = new Avenger("hulk", "banner", "ruffalo");
-	    alphabeticalBST.delete(toDeleteBarton);
-	    alphabeticalBST.delete(toDeleteBanner);
-	    
+	    if (alphabeticalBST.find(toDeleteBarton) != null) {
+	    	alphabeticalBST.delete(toDeleteBarton);
+	    }
+	    if (alphabeticalBST.find(toDeleteBanner) != null) {
+	    	alphabeticalBST.delete(toDeleteBanner);
+	    }
 	    // Use the tree iterator to traverse the alphabetical tree in order
 	    Iterator<Avenger> iterator = alphabeticalBST.iterator();
 
 	    // Add avengers to the other trees with alternative ordering
 	    while (iterator.hasNext()) {
 	        Avenger currentAvenger = iterator.next();
-
+	        
+	        if (!currentAvenger.equals(toDeleteBarton) && !currentAvenger.equals(toDeleteBanner)) {
 	        // Add to mostPopularPerformerBST
 	        mostPopularPerformerBST.add(currentAvenger);
 
@@ -83,8 +82,10 @@ public class A3 {
 	        mentionBST.add(currentAvenger);
 	            
 	        }
+	    }
 	}
 
+	
 	/**
 	 * reads the input stream and keeps track of how many times Avengers are mentioned by fields: 
 	 * alias, last name, or performer name.
@@ -106,6 +107,7 @@ public class A3 {
 		 * You need to think carefully about how you are keeping track of the mention order by setting the mention order for each new avenger.
 		 */
 		
+		
 		int mentionIndexCount = 1;
 		while (input.hasNext()) {
 
@@ -124,6 +126,18 @@ public class A3 {
 	                // Check if the avenger is already in the alphabetically ordered tree
 	                Avenger existingAvenger = alphabeticalBST.find(newAvengerObject);
 	                
+//	                if(alphabeticalBST.size() == 0 || existingAvenger == null) {
+//	                	existingAvenger.addFrequency(word);
+//	                	existingAvenger.setMentionIndex(mentionIndex += 1);
+//	                	alphabeticalBST.add(existingAvenger);
+//	                }
+//	                
+//	                else {
+//	                		Avenger avengerInTree = alphabeticalBST.find(existingAvenger);
+//	                		avengerInTree.addFrequency(word);
+//	                	}
+//	                }
+	                
 	                if (existingAvenger != null ) {
 	                    // If avenger already exists, increase frequency count
 	                    existingAvenger.addFrequency(word);
@@ -135,11 +149,11 @@ public class A3 {
 	                    alphabeticalBST.add(newAvengerObject);
 	                }
 	            }
-	        }
+			}
 		}
-	
 	}
-		
+	
+
 	
 	/**
 	 * creates an avenger object based on a provided word 
@@ -186,20 +200,24 @@ public class A3 {
 		}
 	}
 	
+
 	/**
-	 * prints the top or first  Avenger object from a given BST 
-	 * @param list - takes in an ordered BST containign avenger objects 
-	 * @return Avenger objects - to be printed in a string
+	 * Prints the top or first Avenger object from a given BST.
+	 * @param list - takes in an ordered BST containing Avenger objects.
+	 * @return Avenger object - to be printed in a string.
 	 */
-	private Avenger printTopN(int topN, BST<Avenger> list) {
-		Iterator<Avenger> iterator = list.iterator(); 
-		Avenger printString = null;
-		
-		while (iterator.hasNext() && topN > 0) {
-			printString = iterator.next(); 	
-//			System.out.println(printString.toString());	
-		}	
-			return printString;
+	private Avenger printTopN(BST<Avenger> list) {
+	    Iterator<Avenger> iterator = list.iterator();
+	    int count = 0;
+	    Avenger printString = null;
+
+	    while (iterator.hasNext() && count < topN) {
+	        printString = iterator.next();
+	        System.out.println(printString);
+	        count++;
+	    }
+
+	    return printString;
 	}
 	
 	
@@ -223,12 +241,14 @@ public class A3 {
 				printList(mentionBST);
 				System.out.println();
 				
-				System.out.println("Top " + printTopN(topN, mostPopularAvengerBST) + " most popular avengers:");
+				System.out.println("Top " + topN + " most popular avengers:");
+				printTopN(mostPopularAvengerBST);
 				// TODO: Print the most popular avengers, see the instructions for tie breaking
 				// Make sure you follow the formatting example in the sample output
 				System.out.println();
 
-				System.out.println("Top " + printTopN(topN, mostPopularPerformerBST) + " most popular performers:");
+				System.out.println("Top " +  topN + " most popular performers:");
+				printTopN(mostPopularPerformerBST);
 				// TODO: Print the most popular performers, see the instructions for tie breaking
 				// Make sure you follow the formatting example in the sample output
 				System.out.println();
